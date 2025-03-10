@@ -31,26 +31,16 @@ public class UI {
             out.println("3. Obtener Incidentes");
             out.println("4. Listar Incidentes");
             out.println("5. Eliminar Incidente");
-            out.println("6. Registrar Solicitud De Cambio");
-            out.println("7. Modificar Solicitud De Cambio");
-            out.println("8. Obtener Solicitud De Cambio");
-            out.println("9. Listar Solicitudes de Cambio");
-            out.println("10. Eliminar Solicitud De Cambio");
-            out.println("11. Registrar Solicitud De Servicio");
-            out.println("12. Modificar Solicitud De Servicio");
-            out.println("13. Obtener Solicitud De Servicio");
-            out.println("14. Listar Solicitudes de Servicio");
-            out.println("15. Eliminar Solicitud De Servicio");
-            out.println("16. Registrar Usuario Creador");
-            out.println("17. Modificar Usuario Creador");
-            out.println("18. Obtener Usuario Creador");
-            out.println("19. Listar Usuarios creadores");
-            out.println("20. Eliminar Usuario Creador");
-            out.println("21. Registrar Usuario Administrador");
-            out.println("22. Modificar Usuario Administrador");
-            out.println("23. Obtener Usuario Administrador");
-            out.println("24. Listar Usuarios Administradores");
-            out.println("25. Eliminar Usuario Administrador");
+            out.println("6. Registrar Usuario Creador");
+            out.println("7. Modificar Usuario Creador");
+            out.println("8. Obtener Usuario Creador");
+            out.println("9. Listar Usuarios creadores");
+            out.println("10. Eliminar Usuario Creador");
+            out.println("11. Registrar Usuario Administrador");
+            out.println("12. Modificar Usuario Administrador");
+            out.println("13. Obtener Usuario Administrador");
+            out.println("14. Listar Usuarios Administradores");
+            out.println("15. Eliminar Usuario Administrador");
             out.println("0. Salir");
         }
         public static int seleccionarOpcion() throws IOException {
@@ -78,63 +68,33 @@ public class UI {
                     eliminarIncidente();
                     break;
                 case 6:
-                    agregarSolicituddeCambio();
-                    break;
-                case 7:
-                    modificarSolicituddeCambio();
-                    break;
-                case 8:
-                    obtenerSolicituddeCambio();
-                    break;
-                case 9:
-                    obtenerSolicitudesdeCambio();
-                    break;
-                case 10:
-                    eliminarSolicituddeCambio();
-                    break;
-                case 11:
-                    agregarSolicituddeServicio();
-                    break;
-                case 12:
-                    modificarSolicituddeServicio();
-                    break;
-                case 13:
-                    obtenerSolicituddeServicio();
-                    break;
-                case 14:
-                    obtenerSolicitudesdeServicio();
-                    break;
-                case 15:
-                    eliminarSolicituddeServicio();
-                    break;
-                case 16:
                     agregarUsuarioCreador();
                     break;
-                case 17:
+                case 7:
                     modificarUsuarioCreador();
                     break;
-                case 18:
+                case 8:
                     obtenerUsuarioCreador();
                     break;
-                case 19:
+                case 9:
                     obtenerUsuariosCreadores();
                     break;
-                case 20:
+                case 10:
                     eliminarUsuarioCreador();
                     break;
-                case 21:
+                case 11:
                     agregarUsuarioAdministrador();
                     break;
-                case 22:
+                case 12:
                     modificarUsuarioAdministrador();
                     break;
-                case 23:
+                case 13:
                     obtenerUsuarioAdministrador();
                     break;
-                case 24:
+                case 14:
                     obtenerUsuariosAdministradores();
                     break;
-                case 25:
+                case 15:
                     eliminarUsuarioAdministrador();
                     break;
                 case 0:
@@ -217,161 +177,6 @@ public class UI {
             out.println("Incidente No Encontrado");
     }
 
-//Solicitud de Cambio
-    public static void agregarSolicituddeCambio() throws IOException {
-        SolicitudDeCambio solicituddecambio = new SolicitudDeCambio();
-        out.println("Digite el estado de la Solicitud de cambio");
-        solicituddecambio.setEstado(in.readLine());
-        out.println("Digite el nota de la Solicitud de cambio");
-        solicituddecambio.setNota(in.readLine());
-        out.println("Digite el codigo de la Solicitud de cambio");
-        solicituddecambio.setCodigo(in.readLine());
-        out.println("Digite el descripcion de la Solicitud de cambio");
-        solicituddecambio.setDescripcion(in.readLine());
-        out.println("Digite el usuario creador de la Solicitud de cambio");
-        solicituddecambio.setUsuarioCreador(in.readLine());
-        out.println("Digite el usuario tecnico asignado de la Solicitud de cambio");
-        solicituddecambio.setUsuarioTecnicoAsignado(in.readLine());
-        out.println("Digite fecha de ejecucion de la Solicitud de cambio");
-        solicituddecambio.setFechaEjecucion(LocalDate.parse(in.readLine()));
-        out.println("Digite fecha de requerimiento de la Solicitud de cambio");
-        solicituddecambio.setFechaReqCambio(LocalDate.parse(in.readLine()));
-        out.println("Digite los pasos de la ejecucion de la Solicitud de cambio");
-        solicituddecambio.setPasosEjecCambio(in.readLine());
-        bl.agregarSolicituddeCambio(solicituddecambio);
-    }
-
-    public static void modificarSolicituddeCambio() throws IOException {
-        SolicitudDeCambio solicituddecambio = new SolicitudDeCambio();
-        out.println("Digite el estado de la Solicitud de cambio");
-        solicituddecambio.setEstado(in.readLine());
-        out.println("Digite el nota de la Solicitud de cambio");
-        solicituddecambio.setNota(in.readLine());
-        out.println("Digite el codigo de la Solicitud de cambio");
-        solicituddecambio.setCodigo(in.readLine());
-        out.println("Digite el descripcion de la Solicitud de cambio");
-        solicituddecambio.setDescripcion(in.readLine());
-        out.println("Digite el usuario creador de la Solicitud de cambio");
-        solicituddecambio.setUsuarioCreador(in.readLine());
-        out.println("Digite el usuario tecnico asignado de la Solicitud de cambio");
-        solicituddecambio.setUsuarioTecnicoAsignado(in.readLine());
-        out.println("Digite fecha de ejecucion de la Solicitud de cambio");
-        solicituddecambio.setFechaEjecucion(LocalDate.parse(in.readLine()));
-        out.println("Digite fecha de requerimiento de la Solicitud de cambio");
-        solicituddecambio.setFechaReqCambio(LocalDate.parse(in.readLine()));
-        out.println("Digite los pasos de la ejecucion de la Solicitud de cambio");
-        solicituddecambio.setPasosEjecCambio(in.readLine());
-        if (bl.modificarSolicitudDeCambio(solicituddecambio))
-            out.println("Solicitud de cambio Modificado");
-        else
-            out.println("Solicitud de cambio No Encontrado");
-    }
-
-    public static void obtenerSolicituddeCambio() throws IOException {
-
-        out.println("Digite el código de la solicitud de cambio: ");
-        SolicitudDeCambio solicituddecambio = bl.obtenerSolicitudDeCambio(in.readLine());
-        if(solicituddecambio.getCodigo().isEmpty())
-        {
-            out.println("La solicitud de cambio ingresado no existe");
-        }
-        else
-            out.println(solicituddecambio.toString());
-    }
-    public static void obtenerSolicitudesdeCambio() throws IOException {
-
-        for(SolicitudDeCambio solicituddecambio: bl.obtenerSolicitudesDeCambio())
-        {
-            out.println(solicituddecambio.toString());
-        }
-    }
-
-    public static void eliminarSolicituddeCambio() throws IOException {
-        out.println("Digite el código de la solicitud de cambio a eliminar");
-        if (bl.eliminarSolicitudDeCambio(in.readLine()))
-            out.println("Solicitud de cambio Eliminada");
-        else
-            out.println("Solicitud de cambio No Encontrada");
-    }
-
-//Solicitud de Servicio
-    public static void agregarSolicituddeServicio() throws IOException {
-        SolicitudDeServicio solicituddeservicio = new SolicitudDeServicio();
-        out.println("Digite el estado de la Solicitud de servicio");
-        solicituddeservicio.setEstado(in.readLine());
-        out.println("Digite el nota de la Solicitud de servicio");
-        solicituddeservicio.setNota(in.readLine());
-        out.println("Digite el codigo de la Solicitud de servicio");
-        solicituddeservicio.setCodigo(in.readLine());
-        out.println("Digite el descripcion de la Solicitud de servicio");
-        solicituddeservicio.setDescripcion(in.readLine());
-        out.println("Digite el usuario creador de la Solicitud de servicio");
-        solicituddeservicio.setUsuarioCreador(in.readLine());
-        out.println("Digite el usuario tecnico asignado de la Solicitud de servicio");
-        solicituddeservicio.setUsuarioTecnicoAsignado(in.readLine());
-        out.println("Digite fecha de ejecucion de la Solicitud de servicio");
-        solicituddeservicio.setFechaEjecucion(LocalDate.parse(in.readLine()));
-        out.println("Digite la justificacion de la Solicitud de servicio");
-        solicituddeservicio.setJustificacionServicio(in.readLine());
-        out.println("Digite prioridad de la Solicitud de servicio");
-        solicituddeservicio.setPrioridad(Integer.parseInt(in.readLine()));
-        bl.agregarSolicituddeServicio(solicituddeservicio);
-    }
-
-
-    public static void modificarSolicituddeServicio() throws IOException {
-        SolicitudDeServicio solicituddeservicio = new SolicitudDeServicio();
-        out.println("Digite el estado de la Solicitud de servicio");
-        solicituddeservicio.setEstado(in.readLine());
-        out.println("Digite el nota de la Solicitud de servicio");
-        solicituddeservicio.setNota(in.readLine());
-        out.println("Digite el codigo de la Solicitud de servicio");
-        solicituddeservicio.setCodigo(in.readLine());
-        out.println("Digite el descripcion de la Solicitud de servicio");
-        solicituddeservicio.setDescripcion(in.readLine());
-        out.println("Digite el usuario creador de la Solicitud de servicio");
-        solicituddeservicio.setUsuarioCreador(in.readLine());
-        out.println("Digite el usuario tecnico asignado de la Solicitud de servicio");
-        solicituddeservicio.setUsuarioTecnicoAsignado(in.readLine());
-        out.println("Digite fecha de ejecucion de la Solicitud de servicio");
-        solicituddeservicio.setFechaEjecucion(LocalDate.parse(in.readLine()));
-        out.println("Digite la justificacion de la Solicitud de servicio");
-        solicituddeservicio.setJustificacionServicio(in.readLine());
-        out.println("Digite prioridad de la Solicitud de servicio");
-        solicituddeservicio.setPrioridad(Integer.parseInt(in.readLine()));
-        bl.modificarSolicitudDeServicio(solicituddeservicio);
-        if (bl.modificarSolicitudDeServicio(solicituddeservicio))
-            out.println("Solicitud de servicio Modificado");
-        else
-            out.println("Solicitud de servicio No Encontrado");
-    }
-
-    public static void obtenerSolicituddeServicio() throws IOException {
-
-        out.println("Digite el código de la solicitud de servicio: ");
-        SolicitudDeServicio solicituddeservicio = bl.obtenerSolicitudDeServicio(in.readLine());
-        if(solicituddeservicio.getCodigo().isEmpty())
-        {
-            out.println("La solicitud de servicio ingresado no existe");
-        }
-        else
-            out.println(solicituddeservicio.toString());
-    }
-    public static void obtenerSolicitudesdeServicio() throws IOException {
-
-        for(SolicitudDeServicio solicituddeservicio: bl.obtenerSolicitudesDeServicio())
-        {
-            out.println(solicituddeservicio.toString());
-        }
-    }
-
-    public static void eliminarSolicituddeServicio() throws IOException {
-        out.println("Digite el código de la solicitud de servicio a eliminar");
-        if (bl.eliminarSolicitudDeServicio(in.readLine()))
-            out.println("Solicitud de servicio Eliminada");
-        else
-            out.println("Solicitud de servicio No Encontrada");
-    }
 
 
 //Usuario Creador

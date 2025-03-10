@@ -6,8 +6,6 @@ public class BL {
     private ArrayList<UsuarioCreador> usuariocreador;
     private ArrayList<UsuarioAdministrador> usuarioadministrador;
     private ArrayList<Incidente> incidentes;
-    private ArrayList<SolicitudDeCambio> solicituddecambio;
-    private ArrayList<SolicitudDeServicio> solicituddeservicio;
 //Incidente
 public void agregarIncidente(Incidente incidente) {
     if(incidentes == null) {
@@ -56,103 +54,6 @@ public void agregarIncidente(Incidente incidente) {
         return eliminado;
     }
 
-//Solicitud de Cambio
-    public void agregarSolicituddeCambio(SolicitudDeCambio solicituddeCambio) {
-        if(solicituddecambio == null) {
-            solicituddecambio = new ArrayList<>();
-        }
-        solicituddecambio.add(solicituddeCambio);
-    }
-    public boolean modificarSolicitudDeCambio(SolicitudDeCambio solicituddeCambio)
-    {   boolean modificado = false;
-        for(SolicitudDeCambio solicituddecambioAux : solicituddecambio) {
-            if(solicituddecambioAux.getCodigo().equals(solicituddeCambio.getCodigo())) {
-                solicituddecambioAux.setEstado(solicituddeCambio.getEstado());
-                solicituddecambioAux.setNota(solicituddeCambio.getNota());
-                solicituddecambioAux.setDescripcion(solicituddeCambio.getDescripcion());
-                solicituddecambioAux.setUsuarioCreador(solicituddeCambio.getUsuarioCreador());
-                solicituddecambioAux.setUsuarioTecnicoAsignado(solicituddeCambio.getUsuarioTecnicoAsignado());
-                solicituddecambioAux.setFechaEjecucion(solicituddeCambio.getFechaEjecucion());
-                solicituddecambioAux.setFechaReqCambio(solicituddeCambio.getFechaReqCambio());
-                solicituddecambioAux.setPasosEjecCambio(solicituddeCambio.getPasosEjecCambio());
-                modificado = true;
-            }
-        }
-        return modificado;
-    }
-    public SolicitudDeCambio obtenerSolicitudDeCambio(String codigo) {
-        SolicitudDeCambio miSolicitudDeCambio = new SolicitudDeCambio();
-        for(SolicitudDeCambio solicituddecambioaux : solicituddecambio) {
-            if(solicituddecambioaux.getCodigo().equals(codigo)) {
-
-                miSolicitudDeCambio=solicituddecambioaux;
-            }
-        }
-        return miSolicitudDeCambio;
-    }
-    public ArrayList<SolicitudDeCambio> obtenerSolicitudesDeCambio() {
-        return solicituddecambio;
-    }
-    public boolean eliminarSolicitudDeCambio(String codigo) {
-        boolean eliminado = false;
-        for(SolicitudDeCambio solicituddecambioaux : solicituddecambio) {
-            if(solicituddecambioaux.getCodigo().equals(codigo)) {
-                solicituddecambio.remove(solicituddecambioaux);
-                eliminado = true;
-                break;
-            }
-        }
-        return eliminado;
-    }
-
-//Solicitud de Servicio
-    public void agregarSolicituddeServicio(SolicitudDeServicio solicitudDeServicio) {
-        if(solicituddeservicio == null) {
-            solicituddeservicio = new ArrayList<>();
-        }
-        solicituddeservicio.add(solicitudDeServicio);
-    }
-    public boolean modificarSolicitudDeServicio(SolicitudDeServicio solicitudDeServicio)
-    {   boolean modificado = false;
-        for(SolicitudDeServicio solicituddeservicioAux : solicituddeservicio) {
-            if(solicituddeservicioAux.getCodigo().equals(solicitudDeServicio.getCodigo())) {
-                solicituddeservicioAux.setEstado(solicitudDeServicio.getEstado());
-                solicituddeservicioAux.setNota(solicitudDeServicio.getNota());
-                solicituddeservicioAux.setDescripcion(solicitudDeServicio.getDescripcion());
-                solicituddeservicioAux.setUsuarioCreador(solicitudDeServicio.getUsuarioCreador());
-                solicituddeservicioAux.setUsuarioTecnicoAsignado(solicitudDeServicio.getUsuarioTecnicoAsignado());
-                solicituddeservicioAux.setFechaEjecucion(solicitudDeServicio.getFechaEjecucion());
-                solicituddeservicioAux.setJustificacionServicio(solicitudDeServicio.getJustificacionServicio());
-                solicituddeservicioAux.setPrioridad(solicitudDeServicio.getPrioridad());
-                modificado = true;
-            }
-        }
-        return modificado;
-    }
-    public SolicitudDeServicio obtenerSolicitudDeServicio(String codigo) {
-        SolicitudDeServicio miSolicitudDeServicio = new SolicitudDeServicio();
-        for(SolicitudDeServicio solicituddeservicioaux : solicituddeservicio) {
-            if(solicituddeservicioaux.getCodigo().equals(codigo)) {
-
-                miSolicitudDeServicio=solicituddeservicioaux;
-            }
-        }
-        return miSolicitudDeServicio;
-    }
-    public ArrayList<SolicitudDeServicio> obtenerSolicitudesDeServicio() {
-        return solicituddeservicio;
-    }
-    public boolean eliminarSolicitudDeServicio(String codigo) {
-        boolean eliminado = false;
-        for(SolicitudDeServicio solicituddeservicioaux : solicituddeservicio) {
-            if(solicituddeservicioaux.getCodigo().equals(codigo)) {
-                solicituddeservicio.remove(solicituddeservicioaux);
-                eliminado = true;
-                break;
-            }
-        }
-        return eliminado;
-    }
 
 //UsuarioCreador
     public void agregarUsuarioCreador(UsuarioCreador usuarioCreador) {

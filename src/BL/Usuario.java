@@ -1,35 +1,34 @@
 package BL;
 
-import java.time.LocalDate;
+public class Usuario {
 
-public class Profesor {
-    private String cedula;
+    private String codigo;
     private String nombre;
     private String primerApellido;
     private String segundoApellido;
     private String correoElectronico;
-    private LocalDate fechaNacimiento;
-    private String escalafon;
+    private int telefono;
+    private String password;
 
-    public Profesor() {
-    }
-
-    public Profesor(String cedula, String nombre, String primerApellido, String segundoApellido, String correoElectronico, LocalDate fechaNacimiento, String escalafon) {
-        this.cedula = cedula;
+    public Usuario(String codigo, String nombre, String primerApellido, String segundoApellido, String correoElectronico, int telefono, String password) {
+        this.codigo = codigo;
         this.nombre = nombre;
         this.primerApellido = primerApellido;
         this.segundoApellido = segundoApellido;
         this.correoElectronico = correoElectronico;
-        this.fechaNacimiento = fechaNacimiento;
-        this.escalafon = escalafon;
+        this.telefono = telefono;
+        this.password = password;
     }
 
-    public String getCedula() {
-        return cedula;
+    public Usuario() {
     }
 
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getNombre() {
@@ -64,32 +63,33 @@ public class Profesor {
         this.correoElectronico = correoElectronico;
     }
 
-    public LocalDate getFechaNacimiento() {
-        return fechaNacimiento;
+    public int getTelefono() {
+        return telefono;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
+    public void setTelefono(int telefono) {
+        this.telefono = telefono;
     }
 
-    public String getEscalafon() {
-        return escalafon;
+    public String getPassword() {
+        return password;
     }
 
-    public void setEscalafon(String escalafon) {
-        this.escalafon = escalafon;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
     public String toString() {
-        return "Profesor{" +
-                "cedula='" + cedula + '\'' +
+        return "Usuario{" +
+                "codigo='" + codigo + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", primerApellido='" + primerApellido + '\'' +
                 ", segundoApellido='" + segundoApellido + '\'' +
                 ", correoElectronico='" + correoElectronico + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento +
-                ", escalafon='" + escalafon + '\'' +
+                ", telefono=" + telefono +
+                ", password='" + password + '\'' +
                 '}';
     }
 }
+
