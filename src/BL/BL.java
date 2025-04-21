@@ -1,599 +1,427 @@
 package BL;
 
-import java.time.LocalDate;
+import DAO.TiqueteDAO;
+import DAO.UsuarioDAO;
+
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
 
 public class BL {
-    private ArrayList<UsuarioCreador> usuariocreador;
-    private ArrayList<UsuarioAdministrador> usuarioadministrador;
-    private ArrayList<UsuarioTecnico> usuariotecnico;
-    private ArrayList<Incidente> incidentes;
-    private ArrayList<SolicitudDeCambio> solicituddecambios;
-    private ArrayList<SolicitudDeServicio> solicituddeservicios;
 
+    private UsuarioDAO usuariodao;
+    private TiqueteDAO tiquetedao;
 
+    public BL() {
+        usuariodao = new UsuarioDAO();
+        tiquetedao = new TiqueteDAO();
+    }
     // Métodos para Incidente
-    public void agregarIncidente(Incidente incidente) {
-        if (incidente == null) {
-            throw new IllegalArgumentException("El incidente no puede ser nulo");
-        }
+    public boolean agregarIncidente(Incidente incidente) {
+        boolean duplicado = false;
+        try {
+            for(Incidente incidenteTmp:tiquetedao.listarIncidentes())
+            {
+                if(incidenteTmp.getCodigo().equals(incidente.getCodigo())) {
+                    duplicado = true;
+                }
+            }
+            if(!duplicado) {
+                tiquetedao.insertarIncidente(incidente);
+            }
 
-        if (incidentes == null) {
-            incidentes = new ArrayList<>();
         }
-
-        if (existeIncidente(incidente.getCodigo())) {
-            throw new IllegalStateException("Ya existe un incidente con el código: " + incidente.getCodigo());
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        incidentes.add(incidente);
+        return duplicado;
     }
 
     public boolean modificarIncidente(Incidente incidente) {
-        if (incidente == null) {
-            throw new IllegalArgumentException("El incidente no puede ser nulo");
-        }
-
-        if (incidentes == null || incidentes.isEmpty()) {
-            return false;
-        }
-
         boolean modificado = false;
         try {
-            for (Incidente incidenteAux : incidentes) {
-                if (incidenteAux.getCodigo().equals(incidente.getCodigo())) {
-                    incidenteAux.setEstado(incidente.getEstado());
-                    incidenteAux.setNota(incidente.getNota());
-                    incidenteAux.setDescripcion(incidente.getDescripcion());
-                    incidenteAux.setUsuarioCreador(incidente.getUsuarioCreador());
-                    incidenteAux.setUsuarioTecnicoAsignado(incidente.getUsuarioTecnicoAsignado());
-                    incidenteAux.setFechaSolucion(incidente.getFechaSolucion());
-                    incidenteAux.setDescripcionSolucion(incidente.getDescripcionSolucion());
-                    modificado = true;
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al modificar el incidente", e);
+            tiquetedao.modificarIncidente(incidente);
+            modificado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return modificado;
     }
 
     public Incidente obtenerIncidente(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
+        Incidente miIncidente = new Incidente();
+        try{
+            miIncidente=tiquetedao.obtenerIncidente(codigo);
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
 
-        if (incidentes == null || incidentes.isEmpty()) {
-            return null;
-        }
-
-        for (Incidente incidenteAux : incidentes) {
-            if (incidenteAux.getCodigo().equals(codigo)) {
-                return incidenteAux;
-            }
-        }
-        return null;
+        return miIncidente;
     }
 
     public ArrayList<Incidente> obtenerIncidentes() {
-        if (incidentes == null) {
-            return new ArrayList<>(); // Retorna lista vacía en lugar de null
+        ArrayList<Incidente> incidentes = new ArrayList<>();
+        try
+        {
+            incidentes = tiquetedao.listarIncidentes();
         }
-        return new ArrayList<>(incidentes); // Retorna copia para evitar modificaciones externas
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return incidentes;
     }
 
     public boolean eliminarIncidente(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
-        }
-
-        if (incidentes == null || incidentes.isEmpty()) {
-            return false;
-        }
-
         boolean eliminado = false;
-        try {
-            Iterator<Incidente> iterator = incidentes.iterator();
-            while (iterator.hasNext()) {
-                Incidente incidenteAux = iterator.next();
-                if (incidenteAux.getCodigo().equals(codigo)) {
-                    iterator.remove();
-                    eliminado = true;
-                    break;
-                }
-            }
-        } catch (ConcurrentModificationException e) {
-            throw new RuntimeException("Error de modificación concurrente al eliminar incidente", e);
+        try{
+                tiquetedao.eliminarIncidente(codigo);
+                eliminado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return eliminado;
     }
+
     // Métodos para SolicitudDeCambio
-    public void agregarSolicitudDeCambio(SolicitudDeCambio solicituddecambio) {
-        if (solicituddecambio == null) {
-            throw new IllegalArgumentException("La Solicitud De Cambio no puede ser nulo");
-        }
+    public boolean agregarSolicitudDeCambio(SolicitudDeCambio solicituddecambio) {
+        boolean duplicado = false;
+        try {
+            for(SolicitudDeCambio SolicitudDeCambioTmp:tiquetedao.listarSolicitudDeCambio())
+            {
+                if(SolicitudDeCambioTmp.getCodigo().equals(solicituddecambio.getCodigo())) {
+                    duplicado = true;
+                }
+            }
+            if(!duplicado) {
+                tiquetedao.insertarSolicitudDeCambio(solicituddecambio);
+            }
 
-        if (solicituddecambios == null) {
-            solicituddecambios = new ArrayList<>();
         }
-
-        if (existeSolicitudDeCambio(solicituddecambio.getCodigo())) {
-            throw new IllegalStateException("Ya existe un incidente con el código: " + solicituddecambio.getCodigo());
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        solicituddecambios.add(solicituddecambio);
+        return duplicado;
     }
 
     public boolean modificarSolicitudDeCambio(SolicitudDeCambio solicituddecambio) {
-        if (solicituddecambio == null) {
-            throw new IllegalArgumentException("La Solicitud de Cambio no puede ser nulo");
-        }
-
-        if (solicituddecambios == null || solicituddecambios.isEmpty()) {
-            return false;
-        }
-
         boolean modificado = false;
         try {
-            for (SolicitudDeCambio solicituddecambioAux : solicituddecambios) {
-                if (solicituddecambioAux.getCodigo().equals(solicituddecambio.getCodigo())) {
-                    solicituddecambioAux.setEstado(solicituddecambio.getEstado());
-                    solicituddecambioAux.setNota(solicituddecambio.getNota());
-                    solicituddecambioAux.setDescripcion(solicituddecambio.getDescripcion());
-                    solicituddecambioAux.setUsuarioCreador(solicituddecambio.getUsuarioCreador());
-                    solicituddecambioAux.setUsuarioTecnicoAsignado(solicituddecambio.getUsuarioTecnicoAsignado());
-                    solicituddecambioAux.setFechaReqCambio(solicituddecambio.getFechaReqCambio());
-                    solicituddecambioAux.setPasosEjecCambio(solicituddecambio.getPasosEjecCambio());
-                    modificado = true;
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al modificar la Solicitud de Cambio", e);
+            tiquetedao.modificarSolicitudDeCambio(solicituddecambio);
+            modificado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return modificado;
     }
 
     public SolicitudDeCambio obtenerSolicitudDeCambio(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
+        SolicitudDeCambio miSolicitudDeCambio = new SolicitudDeCambio();
+        try{
+            miSolicitudDeCambio=tiquetedao.obtenerSolicitudDeCambio(codigo);
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
 
-        if (solicituddecambios == null || solicituddecambios.isEmpty()) {
-            return null;
-        }
-
-        for (SolicitudDeCambio solicituddecambioAux : solicituddecambios) {
-            if (solicituddecambioAux.getCodigo().equals(codigo)) {
-                return solicituddecambioAux;
-            }
-        }
-        return null;
+        return miSolicitudDeCambio;
     }
 
     public ArrayList<SolicitudDeCambio> obtenerSolicitudDeCambio() {
-        if (solicituddecambios == null) {
-            return new ArrayList<>(); // Retorna lista vacía en lugar de null
+        ArrayList<SolicitudDeCambio> solicituddecambios = new ArrayList<>();
+        try
+        {
+            solicituddecambios = tiquetedao.listarSolicitudDeCambio();
         }
-        return new ArrayList<>(solicituddecambios); // Retorna copia para evitar modificaciones externas
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return solicituddecambios;
     }
 
     public boolean eliminarSolicitudDeCambio(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
-        }
-
-        if (solicituddecambios == null || solicituddecambios.isEmpty()) {
-            return false;
-        }
-
         boolean eliminado = false;
-        try {
-            Iterator<SolicitudDeCambio> iterator = solicituddecambios.iterator();
-            while (iterator.hasNext()) {
-                SolicitudDeCambio solicituddecambioAux = iterator.next();
-                if (solicituddecambioAux.getCodigo().equals(codigo)) {
-                    iterator.remove();
-                    eliminado = true;
-                    break;
-                }
-            }
-        } catch (ConcurrentModificationException e) {
-            throw new RuntimeException("Error de modificación concurrente al eliminar Solicitud De Cambio", e);
+        try{
+            tiquetedao.eliminarSolicitudDeCambio(codigo);
+            eliminado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return eliminado;
     }
+    public ArrayList<SolicitudDeCambio> listarSolicitudDeCambio() {
+        ArrayList<SolicitudDeCambio> solicituddecambios = new ArrayList<>();
+        try
+        {
+            solicituddecambios = tiquetedao.listarSolicitudDeCambio();
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return solicituddecambios;
+    }
 
     // Métodos para SolicitudDeServicio
-    public void agregarSolicitudDeServicio(SolicitudDeServicio solicituddeservicio) {
-        if (solicituddeservicio == null) {
-            throw new IllegalArgumentException("La Solicitud de Servicio no puede ser nulo");
-        }
+    public boolean agregarSolicitudDeServicio(SolicitudDeServicio solicituddeservicio) {
+        boolean duplicado = false;
+        try {
+            for(SolicitudDeServicio solicituddeservicioTmp:tiquetedao.listarSolicitudDeServicio())
+            {
+                if(solicituddeservicioTmp.getCodigo().equals(solicituddeservicio.getCodigo())) {
+                    duplicado = true;
+                }
+            }
+            if(!duplicado) {
+                tiquetedao.insertarSolicitudDeServicio(solicituddeservicio);
+            }
 
-        if (solicituddeservicios == null) {
-            solicituddeservicios = new ArrayList<>();
         }
-
-        if (existeSolicitudDeServicio(solicituddeservicio.getCodigo())) {
-            throw new IllegalStateException("Ya existe una Solicitud de Servicio con el código: " + solicituddeservicio.getCodigo());
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        solicituddeservicios.add(solicituddeservicio);
+        return duplicado;
     }
 
     public boolean modificarSolicitudDeServicio(SolicitudDeServicio solicituddeservicio) {
-        if (solicituddeservicio == null) {
-            throw new IllegalArgumentException("La Solicitud de Servicio no puede ser nulo");
-        }
-
-        if (solicituddeservicios == null || solicituddeservicios.isEmpty()) {
-            return false;
-        }
-
         boolean modificado = false;
         try {
-            for (SolicitudDeServicio solicituddeservicioAux : solicituddeservicios) {
-                if (solicituddeservicioAux.getCodigo().equals(solicituddeservicio.getCodigo())) {
-                    solicituddeservicioAux.setEstado(solicituddeservicio.getEstado());
-                    solicituddeservicioAux.setNota(solicituddeservicio.getNota());
-                    solicituddeservicioAux.setDescripcion(solicituddeservicio.getDescripcion());
-                    solicituddeservicioAux.setUsuarioCreador(solicituddeservicio.getUsuarioCreador());
-                    solicituddeservicioAux.setUsuarioTecnicoAsignado(solicituddeservicio.getUsuarioTecnicoAsignado());
-                    solicituddeservicioAux.setJustificacionServicio(solicituddeservicio.getJustificacionServicio());
-                    solicituddeservicioAux.setPrioridad(solicituddeservicio.getPrioridad());
-                    modificado = true;
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al modificar la Solicitud de Servicio", e);
+            tiquetedao.modificarSolicitudDeServicio(solicituddeservicio);
+            modificado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return modificado;
     }
 
     public SolicitudDeServicio obtenerSolicitudDeServicio(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
+        SolicitudDeServicio miSolicitudDeServicio = new SolicitudDeServicio();
+        try{
+            miSolicitudDeServicio=tiquetedao.obtenerSolicitudDeServicio(codigo);
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
 
-        if (solicituddeservicios == null || solicituddeservicios.isEmpty()) {
-            return null;
-        }
-
-        for (SolicitudDeServicio solicituddeservicioAux : solicituddeservicios) {
-            if (solicituddeservicioAux.getCodigo().equals(codigo)) {
-                return solicituddeservicioAux;
-            }
-        }
-        return null;
+        return miSolicitudDeServicio;
     }
 
-    public ArrayList<SolicitudDeServicio> obtenerSolicitudDeServicios() {
-        if (solicituddeservicios == null) {
-            return new ArrayList<>(); // Retorna lista vacía en lugar de null
+    public ArrayList<SolicitudDeServicio> listarSolicitudDeServicio() {
+        ArrayList<SolicitudDeServicio> solicituddeservicios = new ArrayList<>();
+        try
+        {
+            solicituddeservicios = tiquetedao.listarSolicitudDeServicio();
         }
-        return new ArrayList<>(solicituddeservicios); // Retorna copia para evitar modificaciones externas
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return solicituddeservicios;
     }
 
     public boolean eliminarSolicitudDeServicio(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
-        }
-
-        if (solicituddeservicios == null || solicituddeservicios.isEmpty()) {
-            return false;
-        }
-
         boolean eliminado = false;
-        try {
-            Iterator<SolicitudDeServicio> iterator = solicituddeservicios.iterator();
-            while (iterator.hasNext()) {
-                SolicitudDeServicio solicituddeservicioAux = iterator.next();
-                if (solicituddeservicioAux.getCodigo().equals(codigo)) {
-                    iterator.remove();
-                    eliminado = true;
-                    break;
-                }
-            }
-        } catch (ConcurrentModificationException e) {
-            throw new RuntimeException("Error de modificación concurrente al eliminar La Solicitud de Servicio", e);
+        try{
+            tiquetedao.eliminarSolicitudDeServicio(codigo);
+            eliminado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return eliminado;
     }
     // Métodos para UsuarioCreador
-    public void agregarUsuarioCreador(UsuarioCreador usuarioCreador) {
-        if (usuarioCreador == null) {
-            throw new IllegalArgumentException("El usuario creador no puede ser nulo");
-        }
+    public boolean agregarUsuarioCreador(UsuarioCreador usuariocreador) {
+        boolean duplicado = false;
+        try {
+            for(UsuarioCreador usuariocreadorTmp:usuariodao.listarUsuarioCreador())
+            {
+                if(usuariocreadorTmp.getCodigo().equals(usuariocreador.getCodigo())) {
+                    duplicado = true;
+                }
+            }
+            if(!duplicado) {
+                usuariodao.insertarUsuarioCreador(usuariocreador);
+            }
 
-        if (usuariocreador == null) {
-            usuariocreador = new ArrayList<>();
         }
-
-        if (existeUsuarioCreador(usuarioCreador.getCodigo())) {
-            throw new IllegalStateException("Ya existe un usuario creador con el código: " + usuarioCreador.getCodigo());
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        usuariocreador.add(usuarioCreador);
+        return duplicado;
     }
 
     public boolean modificarUsuarioCreador(UsuarioCreador usuarioCreador) {
-        if (usuarioCreador == null) {
-            throw new IllegalArgumentException("El usuario creador no puede ser nulo");
-        }
-
-        if (usuariocreador == null || usuariocreador.isEmpty()) {
-            return false;
-        }
-
         boolean modificado = false;
         try {
-            for (UsuarioCreador usuariocreadorAux : usuariocreador) {
-                if (usuariocreadorAux.getCodigo().equals(usuarioCreador.getCodigo())) {
-                    usuariocreadorAux.setDepartamento(usuarioCreador.getDepartamento());
-                    usuariocreadorAux.setPassword(usuarioCreador.getPassword());
-                    usuariocreadorAux.setNombre(usuarioCreador.getNombre());
-                    usuariocreadorAux.setCorreoElectronico(usuarioCreador.getCorreoElectronico());
-                    usuariocreadorAux.setTelefono(usuarioCreador.getTelefono());
-                    usuariocreadorAux.setPrimerApellido(usuarioCreador.getPrimerApellido());
-                    usuariocreadorAux.setSegundoApellido(usuarioCreador.getSegundoApellido());
-                    modificado = true;
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al modificar usuario creador", e);
+            usuariodao.modificarUsuarioCreador(usuarioCreador);
+            modificado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return modificado;
     }
 
-    public UsuarioCreador obtenerUsuarioCreador(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
-        }
-
-        if (usuariocreador == null || usuariocreador.isEmpty()) {
-            return null;
-        }
-
-        for (UsuarioCreador usuariocreadorAux : usuariocreador) {
-            if (usuariocreadorAux.getCodigo().equals(codigo)) {
-                return usuariocreadorAux;
-            }
-        }
-        return null;
-    }
-
-    public ArrayList<UsuarioCreador> obtenerUsuariosCreadores() {
-        if (usuariocreador == null) {
-            return new ArrayList<>();
-        }
-        return new ArrayList<>(usuariocreador);
-    }
-
     public boolean eliminarUsuarioCreador(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
-        }
-
-        if (usuariocreador == null || usuariocreador.isEmpty()) {
-            return false;
-        }
-
         boolean eliminado = false;
-        try {
-            Iterator<UsuarioCreador> iterator = usuariocreador.iterator();
-            while (iterator.hasNext()) {
-                UsuarioCreador usuariocreadorAux = iterator.next();
-                if (usuariocreadorAux.getCodigo().equals(codigo)) {
-                    iterator.remove();
-                    eliminado = true;
-                    break;
-                }
-            }
-        } catch (ConcurrentModificationException e) {
-            throw new RuntimeException("Error de modificación concurrente al eliminar usuario creador", e);
+        try{
+            usuariodao.eliminarUsuarioCreador(codigo);
+            eliminado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return eliminado;
     }
 
     // Métodos para UsuarioAdministrador
-    public void agregarUsuarioAdministrador(UsuarioAdministrador usuarioAdministrador) {
-        if (usuarioAdministrador == null) {
-            throw new IllegalArgumentException("El usuario administrador no puede ser nulo");
-        }
+    public boolean agregarUsuarioAdministrador(UsuarioAdministrador usuarioAdministrador) {
+        boolean duplicado = false;
+        try {
+            for(UsuarioAdministrador usuarioadministradorTmp:usuariodao.listarUsuarioAdministrador())
+            {
+                if(usuarioadministradorTmp.getCodigo().equals(usuarioAdministrador.getCodigo())) {
+                    duplicado = true;
+                }
+            }
+            if(!duplicado) {
+                usuariodao.insertarUsuarioAdmin(usuarioAdministrador);
+            }
 
-        if (usuarioadministrador == null) {
-            usuarioadministrador = new ArrayList<>();
         }
-
-        if (existeUsuarioAdministrador(usuarioAdministrador.getCodigo())) {
-            throw new IllegalStateException("Ya existe un usuario administrador con el código: " + usuarioAdministrador.getCodigo());
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        usuarioadministrador.add(usuarioAdministrador);
+        return duplicado;
     }
 
     public boolean modificarUsuarioAdministrador(UsuarioAdministrador usuarioAdministrador) {
-        if (usuarioAdministrador == null) {
-            throw new IllegalArgumentException("El usuario administrador no puede ser nulo");
-        }
-
-        if (usuarioadministrador == null || usuarioadministrador.isEmpty()) {
-            return false;
-        }
-
         boolean modificado = false;
         try {
-            for (UsuarioAdministrador usuarioadministradorAux : usuarioadministrador) {
-                if (usuarioadministradorAux.getCodigo().equals(usuarioAdministrador.getCodigo())) {
-                    usuarioadministradorAux.setPassword(usuarioAdministrador.getPassword());
-                    usuarioadministradorAux.setNombre(usuarioAdministrador.getNombre());
-                    usuarioadministradorAux.setCorreoElectronico(usuarioAdministrador.getCorreoElectronico());
-                    usuarioadministradorAux.setTelefono(usuarioAdministrador.getTelefono());
-                    usuarioadministradorAux.setPrimerApellido(usuarioAdministrador.getPrimerApellido());
-                    usuarioadministradorAux.setSegundoApellido(usuarioAdministrador.getSegundoApellido());
-                    usuarioadministradorAux.setEstado(usuarioAdministrador.getEstado());
-                    modificado = true;
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al modificar usuario administrador", e);
+            usuariodao.modificarUsuarioAdministrador(usuarioAdministrador);
+            modificado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return modificado;
     }
 
-    public UsuarioAdministrador obtenerUsuarioAdministrador(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
-        }
-
-        if (usuarioadministrador == null || usuarioadministrador.isEmpty()) {
-            return null;
-        }
-
-        for (UsuarioAdministrador usuarioadministradorAux : usuarioadministrador) {
-            if (usuarioadministradorAux.getCodigo().equals(codigo)) {
-                return usuarioadministradorAux;
-            }
-        }
-        return null;
-    }
-
-    public ArrayList<UsuarioAdministrador> obtenerUsuariosAdministradores() {
-        if (usuarioadministrador == null) {
-            return new ArrayList<>();
-        }
-        return new ArrayList<>(usuarioadministrador);
-    }
-
     public boolean eliminarUsuarioAdministrador(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
-        }
-
-        if (usuarioadministrador == null || usuarioadministrador.isEmpty()) {
-            return false;
-        }
-
         boolean eliminado = false;
-        try {
-            Iterator<UsuarioAdministrador> iterator = usuarioadministrador.iterator();
-            while (iterator.hasNext()) {
-                UsuarioAdministrador usuarioadministradorAux = iterator.next();
-                if (usuarioadministradorAux.getCodigo().equals(codigo)) {
-                    iterator.remove();
-                    eliminado = true;
-                    break;
-                }
-            }
-        } catch (ConcurrentModificationException e) {
-            throw new RuntimeException("Error de modificación concurrente al eliminar usuario administrador", e);
+        try{
+            usuariodao.eliminarUsuarioAdministrador(codigo);
+            eliminado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return eliminado;
     }
     // Métodos para UsuarioTecnico
-    public void agregarUsuarioTecnico(UsuarioTecnico usuarioTecnico) {
-        if (usuarioTecnico == null) {
-            throw new IllegalArgumentException("El usuario administrador no puede ser nulo");
-        }
-
-        if (usuariotecnico == null) {
-            usuariotecnico = new ArrayList<>();
-        }
-
-        if (existeUsuarioTecnico(usuarioTecnico.getCodigo())) {
-            throw new IllegalStateException("Ya existe un usuario administrador con el código: " + usuarioTecnico.getCodigo());
-        }
-
-        usuariotecnico.add(usuarioTecnico);
-    }
-
-    public boolean modificarUsuarioTecnico(UsuarioTecnico usuarioTecnico) {
-        if (usuarioTecnico == null) {
-            throw new IllegalArgumentException("El usuario administrador no puede ser nulo");
-        }
-
-        if (usuariotecnico == null || usuariotecnico.isEmpty()) {
-            return false;
-        }
-
-        boolean modificado = false;
+    public boolean agregarUsuarioTecnico(UsuarioTecnico usuariotecnico) {
+        boolean duplicado = false;
         try {
-            for (UsuarioTecnico usuariotecnicoAux : usuariotecnico) {
-                if (usuariotecnicoAux.getCodigo().equals(usuarioTecnico.getCodigo())) {
-                    usuariotecnicoAux.setPassword(usuarioTecnico.getPassword());
-                    usuariotecnicoAux.setNombre(usuarioTecnico.getNombre());
-                    usuariotecnicoAux.setCorreoElectronico(usuarioTecnico.getCorreoElectronico());
-                    usuariotecnicoAux.setTelefono(usuarioTecnico.getTelefono());
-                    usuariotecnicoAux.setPrimerApellido(usuarioTecnico.getPrimerApellido());
-                    usuariotecnicoAux.setSegundoApellido(usuarioTecnico.getSegundoApellido());
-                    usuariotecnicoAux.setRol(usuarioTecnico.getRol());
-                    modificado = true;
-                    break;
+            for(UsuarioTecnico usuariotecnicoTmp:usuariodao.listarUsuarioTecnico())
+            {
+                if(usuariotecnicoTmp.getCodigo().equals(usuariotecnico.getCodigo())) {
+                    duplicado = true;
                 }
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al modificar usuario administrador", e);
+            if(!duplicado) {
+                usuariodao.insertarUsuarioTecnico(usuariotecnico);
+            }
+
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return duplicado;
+    }
+
+public boolean modificarUsuarioTecnico(UsuarioTecnico usuariotecnico) {
+    boolean modificado = false;
+    try {
+        usuariodao.modificarUsuarioTecnico(usuariotecnico);
+        modificado = true;
+    }
+    catch(Exception e) {
+        System.out.println(e.getMessage());
+    }
+    return modificado;
+}
+
+public boolean eliminarusuariotecnico(String codigo) {
+    boolean eliminado = false;
+    try{
+        usuariodao.eliminarUsuarioTecnico(codigo);
+        eliminado = true;
+    }
+    catch(Exception e) {
+        System.out.println(e.getMessage());
+    }
+    return eliminado;
+}
+
+//Usuario
+public boolean agregarUsuario(Usuario usuario) {
+    boolean duplicado = false;
+    try {
+        for(Usuario usuarioTmp:usuariodao.listarUsuario())
+        {
+            if(usuarioTmp.getCodigo().equals(usuario.getCodigo())) {
+                duplicado = true;
+            }
+        }
+        if(!duplicado) {
+            usuariodao.insertarUsuario(usuario);
+        }
+
+    }
+    catch(Exception e) {
+        System.out.println(e.getMessage());
+    }
+    return duplicado;
+}
+
+    public boolean modificarUsuario(Usuario usuario) {
+        boolean modificado = false;
+        try {
+            usuariodao.modificarUsuario(usuario);
+            modificado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return modificado;
     }
 
-    public UsuarioTecnico obtenerUsuarioTecnico(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
-        }
-
-        if (usuariotecnico == null || usuariotecnico.isEmpty()) {
-            return null;
-        }
-
-        for (UsuarioTecnico usuariotecnicoAux : usuariotecnico) {
-            if (usuariotecnicoAux.getCodigo().equals(codigo)) {
-                return usuariotecnicoAux;
-            }
-        }
-        return null;
-    }
-
-    public ArrayList<UsuarioTecnico> obtenerUsuariosTecnico() {
-        if (usuariotecnico == null) {
-            return new ArrayList<>();
-        }
-        return new ArrayList<>(usuariotecnico);
-    }
-
-    public boolean eliminarUsuarioTecnico(String codigo) {
-        if (codigo == null || codigo.trim().isEmpty()) {
-            throw new IllegalArgumentException("El código no puede ser nulo o vacío");
-        }
-
-        if (usuariotecnico == null || usuariotecnico.isEmpty()) {
-            return false;
-        }
-
+    public boolean eliminarusuario(String codigo) {
         boolean eliminado = false;
-        try {
-            Iterator<UsuarioTecnico> iterator = usuariotecnico.iterator();
-            while (iterator.hasNext()) {
-                UsuarioTecnico usuariotecnicoAux = iterator.next();
-                if (usuariotecnicoAux.getCodigo().equals(codigo)) {
-                    iterator.remove();
-                    eliminado = true;
-                    break;
-                }
-            }
-        } catch (ConcurrentModificationException e) {
-            throw new RuntimeException("Error de modificación concurrente al eliminar usuario administrador", e);
+        try{
+            usuariodao.eliminarUsuario(codigo);
+            eliminado = true;
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
         }
         return eliminado;
     }
+    public Usuario obtenerUsuario(String codigo) {
+        Usuario miUsuario = new Usuario();
+        try{
+            miUsuario=usuariodao.obtenerUsuario(codigo);
+        }
+        catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-    // Métodos auxiliares de validación
+        return miUsuario;
+    }
+
+/*    // Métodos auxiliares de validación
     private boolean existeIncidente(String codigo) {
         if (incidentes == null) return false;
         for (Incidente incidente : incidentes) {
@@ -605,7 +433,7 @@ public class BL {
     }
     private boolean existeSolicitudDeCambio(String codigo) {
         if (solicituddecambios == null) return false;
-        for (SolicitudDeCambio solicituddecambio : solicituddecambios) {
+        for (SolicitudDeCambio solicituddeservicio : solicituddecambios) {
             if (solicituddecambio.getCodigo().equals(codigo)) {
                 return true;
             }
@@ -650,4 +478,6 @@ public class BL {
         }
         return false;
     }
+
+ */
 }

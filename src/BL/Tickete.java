@@ -1,7 +1,5 @@
 package BL;
 
-import java.time.LocalDate;
-
 public class Tickete {
 
         private String estado;
@@ -67,7 +65,7 @@ public class Tickete {
         return usuarioTecnicoAsignado;
     }
 
-    public void setUsuarioTecnicoAsignado(String usuarioTecnicoAsignado) {
+    public void setUsuarioTecnicoAsignado() {
         this.usuarioTecnicoAsignado = usuarioTecnicoAsignado;
     }
 
